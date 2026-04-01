@@ -14,7 +14,7 @@ router.post("/analyze", async (req, res) => {
     }
 
     try {
-        const fastapiResponse = await axios.post("http://localhost:8000/analyze", { text });
+        const fastapiResponse = await axios.post("http://127.0.0.1:8000/analyze", { text });
         const result = fastapiResponse.data;
 
         const tweet = new Tweet({
@@ -64,7 +64,7 @@ router.post("/analyze-news", async (req, res) => {
         const results = [];
 
         for (const article of articles) {
-            const fastapiResponse = await axios.post("http://localhost:8000/analyze", {
+            const fastapiResponse = await axios.post("http://127.0.0.1:8000/analyze", {
                 text: article.title
             });
 
