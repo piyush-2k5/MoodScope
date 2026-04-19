@@ -6,7 +6,7 @@ const badges = {
   Neutral: "bg-amber-500/15 text-amber-400 border border-amber-500/30"
 };
 
-export default function NewsSearch({ onAnalyze, loading, progress, newsResults }) {
+export default function NewsSearch({ onAnalyze, loading, progress, newsResults, message }) {
   const [keyword, setKeyword] = useState("");
 
   return (
@@ -35,6 +35,12 @@ export default function NewsSearch({ onAnalyze, loading, progress, newsResults }
               style={{ width: `${progress}%` }}
             />
           </div>
+        )}
+
+        {message && !loading && (
+          <p className="mt-3 text-center text-sm text-amber-400">
+            {message}
+          </p>
         )}
       </div>
 

@@ -17,6 +17,7 @@ export default function App() {
   const [newsResults, setNewsResults] = useState([]);
   const [progress, setProgress] = useState(0);
   const [activeTab, setActiveTab] = useState("manual");
+  const [newsMessage, setNewsMessage] = useState("");
 
   useEffect(() => {
     fetchAnalytics();
@@ -56,28 +57,37 @@ export default function App() {
   };
 
   const analyzeNews = async (keyword) => {
-    setLoading(true);
-    setNewsResults([]);
-    setProgress(0);
+  setLoading(true);
+  setNewsResults([]);
+  setProgress(0);
+  setNewsMessage("");
 
-    try {
-      const res = await axios.post(`${API}/analyze-news`, { keyword });
-      const results = res.data.results;
+  try {
+    const res = await axios.post(`${API}/analyze-news`, { keyword });
 
-      for (let i = 0; i < results.length; i++) {
-        await new Promise((r) => setTimeout(r, 150));
-        setNewsResults((prev) => [...prev, results[i]]);
-        setProgress(Math.round(((i + 1) / results.length) * 100));
-      }
-
-      fetchAnalytics();
-      fetchHistory();
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
+    if (res.data.total === 0) {
+      setNewsMessage(res.data.message);
+      return;
     }
-  };
+
+    const results = res.data.results;
+
+    for (let i = 0; i < results.length; i++) {
+      await new Promise((r) => setTimeout(r, 150));
+      setNewsResults((prev) => [...prev, results[i]]);
+      setProgress(Math.round(((i + 1) / results.length) * 100));
+    }
+
+    fetchAnalytics();
+    fetchHistory();
+
+  } catch (err) {
+    console.error(err);
+    setNewsMessage("Something went wrong.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
   <>
@@ -128,6 +138,7 @@ export default function App() {
             loading={loading}
             progress={progress}
             newsResults={newsResults || []}
+            message={newsMessage}
           />
         )}
 

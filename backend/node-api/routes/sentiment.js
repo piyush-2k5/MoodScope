@@ -30,7 +30,12 @@ router.post("/analyze-news", async (req, res) => {
             .slice(0, 5);
 
         if (articles.length === 0) {
-            return res.status(404).json({ error: "No articles found" });
+            return res.json({
+                keyword,
+                total: 0,
+                results: [],
+                message: "No recent news found for this keyword. Try another search term."
+            });
         }
 
         const promises = articles.map(article =>
